@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for id in ['1','2','3','4'] %}
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-semibold text-purple-600">Regalo #{{ id }}</h3>
+                        {% if riddles[id] %}
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">🎁 Resuelto</span>
+                        {% else %}
+                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">🔒 Por descubrir</span>
+                        {% endif %}
+                    </div>
+                    
+                    {% if not riddles[id] %}
+                        <a href="{{ url_for('adivinanza', id=id) }}" 
+                           class="inline-block w-full text-center bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            🧩 Intentar Acertijo
+                        </a>
+                    {% else %}
+                        <div class="text-center p-3 bg-emerald-50 rounded-lg mt-2">
+                            <span class="text-sm text-emerald-700">¡Pista desbloqueada! 🎉</span>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-md border-2 border-dashed border-purple-200">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold text-pink-600">🎁 Regalo Mensual</h3>
+                {% if mensual['resuelto'] %}
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">✅ Este mes</span>
+                {% else %}
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">🌙 Disponible</span>
+                {% endif %}
+            </div>
+            
+            {% if mensual['ultimo_intento'] %}
+                <p class="text-gray-500 text-sm mb-3">
+                    Último intento: {{ datetime.fromisoformat(mensual['ultimo_intento']).strftime('%d/%m/%Y') }}
+                </p>
+            {% endif %}
+            
+            <a href="{{ url_for('mensual') }}" 
+               class="inline-block w-full text-center bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-colors">
+                🗝️ Intentar Acertijo Mensual
+            </a>
+        </div>
+    </div>
+{% endblock %}

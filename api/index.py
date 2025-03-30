@@ -113,6 +113,6 @@ def mensual():
     
     return render_template('monthly.html')
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
  

@@ -5,7 +5,6 @@ import jwt
 import os
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-from dotenv import load_dotenv
 from db import SupabaseClient
 from unidecode import unidecode
 
@@ -13,8 +12,6 @@ ROUTES={
     'register': "/oajspoihpifojapoisjpiodsa"
 
 }
-
-load_dotenv()
 
 app = Flask(__name__)
 app.config['JWT_SECRET'] = "aspoifjiopsjcpoijaspiojcpoiajsipojapoisiodads"
@@ -152,7 +149,7 @@ def login():
         
         response = make_response(redirect(url_for('index')))
         token = create_jwt(user[0]['id'])
-        response.set_cookie('access_token', token, httponly=True, secure=True)
+        response.set_cookie('access_token', token, httponly=True)
         return response
     
     return render_template('auth/login.html')

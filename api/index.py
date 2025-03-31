@@ -5,7 +5,6 @@ import jwt
 import os
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-from db import SupabaseClient
 from unidecode import unidecode
 
 ROUTES={
@@ -15,8 +14,22 @@ ROUTES={
 
 app = Flask(__name__)
 app.config['JWT_SECRET'] = "aspoifjiopsjcpoijaspiojcpoiajsipojapoisiodads"
+POSTGRES_URL="postgres://postgres.ymhqxdxgjmkqqnogyaxx:gRNRbBi3FNvd2JTM@aws-0-eu-west-2.pooler.supabase.com:6543/postgres?sslmode=require&supa=base-pooler.x"
+POSTGRES_PRISMA_URL="postgres://postgres.ymhqxdxgjmkqqnogyaxx:gRNRbBi3FNvd2JTM@aws-0-eu-west-2.pooler.supabase.com:6543/postgres?sslmode=require&supa=base-pooler.x"
+SUPABASE_URL="https://ymhqxdxgjmkqqnogyaxx.supabase.co"
+NEXT_PUBLIC_SUPABASE_URL="https://ymhqxdxgjmkqqnogyaxx.supabase.co"
+POSTGRES_URL_NON_POOLING="postgres://postgres.ymhqxdxgjmkqqnogyaxx:gRNRbBi3FNvd2JTM@aws-0-eu-west-2.pooler.supabase.com:5432/postgres?sslmode=require"
+SUPABASE_JWT_SECRET="jQXOLyGohIFgF8zwyMr3ATgvse9C6L4b792/opLocrNZzzsJOx43Pf3sHHro+6z5vKGDmkbvMhRC7IY3lrcbPw=="
+POSTGRES_USER="postgres"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InltaHF4ZHhnam1rcXFub2d5YXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMzNzAwOTYsImV4cCI6MjA1ODk0NjA5Nn0.igwPOKAqXoot3OnE6n3W1rti3GhAaHj6K-rqiUi_3lA"
+POSTGRES_PASSWORD="gRNRbBi3FNvd2JTM"
+POSTGRES_DATABASE="postgres"
+SUPABASE_SERVICE_ROLE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InltaHF4ZHhnam1rcXFub2d5YXh4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MzM3MDA5NiwiZXhwIjoyMDU4OTQ2MDk2fQ.Zx8ShbefCCIE87PN02n1XGCtc5XItVP009Hr2RW9kFw"
+POSTGRES_HOST="db.ymhqxdxgjmkqqnogyaxx.supabase.co"
+SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InltaHF4ZHhnam1rcXFub2d5YXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMzNzAwOTYsImV4cCI6MjA1ODk0NjA5Nn0.igwPOKAqXoot3OnE6n3W1rti3GhAaHj6K-rqiUi_3lA"
 
-supabase: Client = SupabaseClient().get_client()
+
+
 
 @app.template_filter('mes_nombre')
 def mes_nombre(numero):
@@ -28,6 +41,18 @@ def mes_nombre(numero):
     return meses.get(numero, "Mes inválido")
 
 app.jinja_env.filters['month_name'] = mes_nombre
+
+
+class SupabaseClient:
+    def __init__(self):
+        self.url: str = SUPABASE_URL
+        self.key: str = SUPABASE_ANON_KEY
+        self.client: Client = create_client(self.url, self.key)
+        
+    def get_client(self):
+        return self.client
+
+supabase: Client = SupabaseClient().get_client()
 
 # Decorador para proteger rutas
 def jwt_required(f):

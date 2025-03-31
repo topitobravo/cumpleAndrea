@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="text-center space-y-6">
+        <div class="float-effect">
+            <span class="text-6xl">🔍</span>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-lg">           
+            {% if error %}
+                <div class="bg-red-50 text-red-700 p-3 rounded-lg mb-4">
+                    {{ error }} ❌
+                </div>
+            {% endif %}
+            
+        </div>
+    </div>
+{% endblock %}

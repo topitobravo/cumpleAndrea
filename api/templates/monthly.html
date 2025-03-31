@@ -1,30 +1,72 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="text-center space-y-6">
-        <div class="animate-bounce">
-            <span class="text-6xl">🌙</span>
-        </div>
-        
-        <div class="bg-white p-6 rounded-xl shadow-lg">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ RIDDLES['mensual']['pregunta'] }}</h2>
-            
-            {% if error %}
-                <div class="bg-yellow-50 text-yellow-800 p-3 rounded-lg mb-4">
-                    {{ error }} ⏳
+<div class="text-center space-y-6">
+    <div class="animate-bounce">
+        <span class="text-6xl">🌙</span>
+        <h1 class="text-2xl font-bold text-purple-600 mt-2">
+            Acertijo de {{ monthly_riddle.month|month_name }}
+        </h1>
+    </div>
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-2xl mx-auto">
+        {% if solved %}
+            <div class="bg-green-50 p-6 rounded-lg border-2 border-green-200">
+                <div class="text-green-600 mb-4">
+                    <span class="text-4xl">🎉</span>
+                    <p class="text-xl font-semibold mt-2">¡Acertijo resuelto!</p>
+                    <div class="bg-green-50 text-green-700 p-4 rounded-lg">
+                        <p> Pista: {{ monthly_riddle.hint }}</p>
+                    </div>
                 </div>
-            {% endif %}
-            
-            <form method="POST" class="space-y-4">
-                <input type="text" 
-                       name="respuesta" 
-                       placeholder="Tu respuesta mensual..."
-                       class="w-full px-4 py-2 border-2 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent">
-                
-                <button type="submit" 
-                        class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-lg transition-colors font-semibold">
-                    🌟 Validar Respuesta
-                </button>
-            </form>
+                <p class="text-gray-600">
+                    Próximo acertijo disponible el 
+                    <span class="font-bold text-purple-600">
+                        {{ next_month_date.strftime('%d/%m/%Y') }}
+                    </span>
+                </p>
+            </div>
+        {% else %}
+            <div class="space-y-6">
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <p class="text-lg font-medium text-purple-800">
+                        {{ monthly_riddle.question }}
+                    </p>
+                </div>
+
+                {% if error %}
+                    <div class="bg-red-50 text-red-700 p-4 rounded-lg">
+                        <p>{{ error }}</p>
+                    </div>
+                {% endif %}
+
+                {% if success %}
+                    <div class="bg-green-50 text-green-700 p-4 rounded-lg">
+                        <p>¡Correcto! 🎉 Pista: {{ monthly_riddle.hint }}</p>
+                    </div>
+                {% endif %}
+
+                <form method="POST" class="space-y-4">
+                    <input type="text" 
+                           name="respuesta" 
+                           placeholder="Escribe tu respuesta aquí..."
+                           class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl text-lg"
+                           autocomplete="off"
+                           {% if solved %}disabled{% endif %}>
+
+                    <button type="submit" 
+                            class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-xl text-lg font-semibold"
+                            {% if solved %}disabled{% endif %}>
+                        {% if solved %}✅ Resuelto{% else %}🌟 Intentar resolver{% endif %}
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+
+        <div class="mt-8">
+            <a href="{{ url_for('index') }}" class="text-purple-600 hover:text-purple-700">
+                ← Volver a los regalos
+            </a>
         </div>
     </div>
+</div>
 {% endblock %}

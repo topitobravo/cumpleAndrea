@@ -1,51 +1,82 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {% for id in ['1','2','3','4'] %}
-                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-semibold text-purple-600">Regalo #{{ id }}</h3>
-                        {% if riddles[id] %}
+    <div class="space-y-8">
+        <!-- Encabezado personalizado -->
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-purple-600">¡Hola {{ user.username }}! 🎉</h2>
+            <p class="text-gray-600 mt-2">Resuelve los acertijos para descubrir tus regalos</p>
+
+        </div>
+
+        <!-- Grid de adivinanzas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for riddle in riddles if riddle.type == 'regular' %}
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">Adivinanza #{{ loop.index }}</h3>
+                            <p class="text-gray-600 text-sm mt-1">{{ riddle.question }}</p>
+                        </div>
+                        {% if riddle.id in solved_riddles %}
                             <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">🎁 Resuelto</span>
                         {% else %}
-                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">🔒 Por descubrir</span>
+                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">🔒 Por resolver</span>
                         {% endif %}
                     </div>
                     
-                    {% if not riddles[id] %}
-                        <a href="{{ url_for('adivinanza', id=id) }}" 
+                    {% if riddle.id not in solved_riddles %}
+                        <a href="{{ url_for('solve_riddle', riddle_id=riddle.id) }}" 
                            class="inline-block w-full text-center bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors">
-                            🧩 Intentar Acertijo
+                            🧩 Intentar resolver
                         </a>
                     {% else %}
                         <div class="text-center p-3 bg-emerald-50 rounded-lg mt-2">
-                            <span class="text-sm text-emerald-700">¡Pista desbloqueada! 🎉</span>
+                            <p class="text-sm text-emerald-700">
+                                Resuelto el: {{ solved_riddles[riddle.id] }}
+                            </p>
                         </div>
+                        <div class="bg-emerald-50 p-4 rounded-lg border-2 border-dashed border-emerald-200">
+                            <span class="text-emerald-700 font-medium text-xl">🗺️ {{ riddle.hint }}</span>
+                        </div>
+                        
                     {% endif %}
                 </div>
             {% endfor %}
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-md border-2 border-dashed border-purple-200">
+        <!-- Sección de adivinanza mensual -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border-2 border-dashed border-purple-200 mt-8">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-xl font-semibold text-pink-600">🎁 Regalo Mensual</h3>
-                {% if mensual['resuelto'] %}
-                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">✅ Este mes</span>
-                {% else %}
-                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">🌙 Disponible</span>
-                {% endif %}
+                <div>
+                    <h3 class="text-xl font-semibold text-pink-600">🎁 Regalo Mensual</h3>
+                </div>
+                <div class="flex justify-between items-start">
+                    {% if monthly_riddle.id in solved_riddles %}
+                        <div class="text-right">
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">✅ Resuelto</span>
+                        </div>
+                    {% else %}
+                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">🌙 Disponible</span>
+                    {% endif %}
+                </div>
+                
+                {% if monthly_riddle.id in solved_riddles %}
+                    <div class="bg-emerald-50 p-4 mt-2 rounded-lg border-2 border-dashed border-emerald-200">
+                        <span class="text-emerald-700 font-medium text-xl">🗺️ {{ monthly_riddle.hint }}</span>
+                        <p class="text-gray-600 mt-1">
+                            Próximo acertijo disponible el 
+                            <span class="font-bold text-purple-600">
+                                {{ next_month_date.strftime('%d/%m/%Y') }}
+                            </span>
+                        </p>
+                    </div>
+                {% endif %}                
             </div>
             
-            {% if mensual['ultimo_intento'] %}
-                <p class="text-gray-500 text-sm mb-3">
-                    Último intento: {{ datetime.fromisoformat(mensual['ultimo_intento']).strftime('%d/%m/%Y') }}
-                </p>
-            {% endif %}
             
-            <a href="{{ url_for('mensual') }}" 
+            <a href="{{ url_for('monthly_riddle') }}" 
                class="inline-block w-full text-center bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-colors">
-                🗝️ Intentar Acertijo Mensual
+                🗝️ Intentar adivinanza mensual
             </a>
         </div>
     </div>

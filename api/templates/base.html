@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎂 Tesoro de Cumpleaños 🎉</title>
+    <title>🎂 36º Cumpleaños - Tesoro 🎉</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes float {
@@ -13,16 +13,25 @@
         }
         .float-effect { animation: float 3s ease-in-out infinite; }
         .birthday-gradient { background: linear-gradient(135deg, #6366f1 0%, #d946ef 50%, #f59e0b 100%); }
+        .balloon {
+            position: absolute;
+            font-size: 3rem;
+            animation: float 4s ease-in-out infinite alternate;
+        }
+        .balloon:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+        .balloon:nth-child(2) { left: 80%; top: 30%; animation-delay: 1s; }
     </style>
 </head>
-<body class="birthday-gradient min-h-screen">
+<body class="birthday-gradient min-h-screen flex justify-center items-center relative">
+    <div class="balloon">🎈36</div>
+    <div class="balloon">36🎈</div>
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-8 transform transition-all duration-300 hover:shadow-3xl">
             <header class="text-center mb-8">
                 <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent py-2">
-                    🎉 ¡Tesoro de Cumpleaños! 🎂
+                    🎉 ¡Feliz 36º Cumpleaños! 🎂
                 </h1>
-                <!-- <p class="text-gray-600 mt-2">Resuelve los acertijos para descubrir tus regalos</p> -->
+                <p class="text-gray-600 mt-2 text-lg">¡Resuelve los acertijos y descubre tus regalos sorpresa! 🎁</p>
             </header>
 
             <main>

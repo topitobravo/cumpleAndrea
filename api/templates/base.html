@@ -38,6 +38,27 @@
                 {% block content %}{% endblock %}
             </main>
         </div>
+        <footer>
+            <p>Miaurechos reservados Cosmo <img src="static/cosmo_cabeza.png" alt="Cosmo" class="gato-img">
+               y Cooper <img src="static/cooper_cabeza.png" alt="Cooper" class="gato-img"> </p>
+            <style>
+                footer {
+                    font-size: 0.8rem;      /* Reduce el tamaño del texto */
+                    text-align: center;     /* Centra el contenido */
+                    margin-top: 20px;       /* Agrega margen superior */
+                    padding: 5px 0;         /* Reduce el padding */
+                }
+
+                .gato-img {
+                    display: inline;
+                    width: 1.5em;            /* Reduce el tamaño relativo a la fuente */
+                    height: 1.5em;
+                    vertical-align: middle;  /* Alinea mejor con el texto */
+                    margin: 0 2px;           /* Añade un pequeño margen lateral */
+                }
+            </style>
+        </footer>
     </div>
+
 </body>
 </html>

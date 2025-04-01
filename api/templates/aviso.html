@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡¡AVISO!!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .float-effect {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .birthday-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #d946ef 50%, #f59e0b 100%);
+        }
+
+        .balloon {
+            position: absolute;
+            font-size: 3rem;
+            animation: float 4s ease-in-out infinite alternate;
+        }
+
+        .balloon:nth-child(1) {
+            left: 10%;
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .balloon:nth-child(2) {
+            left: 80%;
+            top: 30%;
+            animation-delay: 1s;
+        }
+    </style>
+</head>
+
+<body class="birthday-gradient min-h-screen flex justify-center items-center relative">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div
+            class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-8 transform transition-all duration-300 hover:shadow-3xl">
+                <div class="container">
+                    <div class="intro-text">
+                        <p>🎉 ¡Hola!</p>
+                        <p>🎉 Somos tus gatitos, Cosmo <img src="static/cosmo_cabeza.png" alt="Cosmo" class="gato-img">  y Cooper!<img src="static/cooper_cabeza.png" alt="Cooper" class="gato-img"> 🎉</p>
+                      </div>
+
+                      <style>
+                        .gato-img {
+                          display: inline;              /* Asegura que se comporten como texto */
+                          width: 2em;                   /* Ajusta el tamaño relativo a la fuente */
+                          height: 2em;                  /* Ajusta el alto relativo a la fuente */
+                          vertical-align: text-bottom;  /* O bien 'middle' o 'baseline', según el efecto deseado */
+                          margin: 0;                    /* Quita cualquier margen extra */
+                          padding: 0;                   /* Quita cualquier relleno */
+                        }
+                      </style>
+                        <div class="float-effect">
+                            <span class="text-6xl">🔍</span>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-lg">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ pregunta }}</h2>
+
+                            {% if error%}
+                            <div class="bg-red-50 text-red-700 p-3 rounded-lg mb-4">
+                                {{ error }} ❌
+                            </div>
+                            {% endif %}
+
+                            <form method="POST" class="space-y-4">
+                                <input type="text" name="respuesta" placeholder="Confirma tu asistencia aqui"
+                                    class="w-full px-4 py-2 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+
+                                <button type="submit"
+                                    class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg transition-colors font-semibold">
+                                    ✨ Enviar respuesta
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+        </div>
+    </div>
+</body>
+
+</html>

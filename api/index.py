@@ -8,8 +8,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from unidecode import unidecode
 
 ROUTES={
-    'register': "/oajspoihpifojapoisjpiodsa"
-
+    'register': "/oajspoihpifojapoisjpiodsa",
+    'login' : "/aoisjhfopishfpiojahsipjfioas",
+    'index' : "/fjsjfacahpocijahipsojcipojsiodsa",
+    'aviso' : "/jahcdjhioajsiojciojasocojsisd"
 }
 
 app = Flask(__name__)
@@ -48,7 +50,7 @@ class SupabaseClient:
         self.url: str = SUPABASE_URL
         self.key: str = SUPABASE_ANON_KEY
         self.client: Client = create_client(self.url, self.key)
-        
+
     def get_client(self):
         return self.client
 
@@ -87,13 +89,13 @@ def create_jwt(user_id):
 
 
 
-@app.route('/')
+@app.route(ROUTES['index'])
 @jwt_required
 def index():
     try:
         # Obtener usuario actual
         user_id = request.user['id']
-        
+
         # Obtener todas las adivinanzas activas
         all_riddles = supabase.table('riddles') \
                             .select('*') \
@@ -102,7 +104,7 @@ def index():
 
         # Separar adivinanzas regulares y mensuales
         regular_riddles = [r for r in all_riddles if r['type'] == 'regular']
-        
+
         # Obtener el acertijo mensual actual (basado en mes/año actual)
         current_date = datetime.now()
         monthly_riddle = supabase.table('riddles') \
@@ -125,7 +127,7 @@ def index():
             'next_attempt': None
         }
           # Crear diccionario de progreso
-        solved_riddles = {p['riddle_id']: datetime.fromisoformat(p['solved_at']) 
+        solved_riddles = {p['riddle_id']: datetime.fromisoformat(p['solved_at'])
                         for p in progress if p['solved_at']}
         if monthly_riddle:
             last_solved = solved_riddles.get(monthly_riddle['id'])
@@ -148,6 +150,10 @@ def index():
         app.logger.error(f'Error en index: {str(e)}')
         return render_template('error.html', message="Error cargando los acertijos"), 500
 
+@app.route(ROUTES['aviso'], methods=['GET', 'POST'])
+def aviso():
+    return render_template('aviso.html')
+
 @app.route('/bienvenida', methods=['GET', 'POST'])
 def bienvenida():
     inicial = supabase.table('riddles').select('*').eq('name', 'Inicial').execute().data[0]
@@ -157,26 +163,26 @@ def bienvenida():
             return make_response(redirect(url_for('register')))
         else:
             return render_template('bienvenida.html', error="Vuelvelo a intentar. Venga, esta es muy facil :)")
-    
+
     return render_template('bienvenida.html',pregunta=inicial['question'])
 
 
 #login
-@app.route('/login', methods=['GET', 'POST'])
+@app.route(ROUTES['login'], methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        
+
         user = supabase.table('users').select('*').eq('username', username).execute().data
         if not user or not check_password_hash(user[0]['password_hash'], password):
             return render_template('auth/login.html', error='Credenciales inválidas')
-        
+
         response = make_response(redirect(url_for('index')))
         token = create_jwt(user[0]['id'])
         response.set_cookie('access_token', token, httponly=True)
         return response
-    
+
     return render_template('auth/login.html')
 
 @app.route(ROUTES['register'], methods=['GET', 'POST'])
@@ -184,21 +190,21 @@ def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = generate_password_hash(request.form.get('password'))
-        
+
         try:
             user = supabase.table('users').insert({
                 'username': username,
                 'password_hash': password,
                 'is_admin': False
             }).execute().data
-            
+
             response = make_response(redirect(url_for('index')))
             token = create_jwt(user[0]['id'])
             response.set_cookie('access_token', token, httponly=True, secure=True)
             return response
         except Exception as e:
             return render_template('auth/register.html', error='Error al registrar usuario')
-    
+
     return render_template('auth/register.html')
 
 @app.route('/logout')
@@ -213,13 +219,13 @@ def solve_riddle(riddle_id):
     riddle = supabase.table('riddles').select('*').eq('id', riddle_id).execute().data
     if not riddle:
         return redirect(url_for('index'))
-    
+
     riddle = riddle[0]
     progress = supabase.table('user_progress').select('*').match({
         'user_id': request.user['id'],
         'riddle_id': riddle_id
     }).execute().data
-    
+
     if request.method == 'POST':
         answer = request.form.get('respuesta', '').strip().lower()
         if comparar_strings(answer,riddle['answer']):
@@ -229,13 +235,13 @@ def solve_riddle(riddle_id):
                 'riddle_id': riddle_id,
                 'solved_at': datetime.now(timezone.utc).isoformat()
             }).execute()
-            
+
             return render_template('clue.html', pista=riddle['hint'])
-        
-        return render_template('riddle.html', 
+
+        return render_template('riddle.html',
                              riddle=riddle,
                              error='Respuesta incorrecta')
-    
+
     return render_template('riddle.html', riddle=riddle)
 
 @app.route('/monthly', methods=['GET', 'POST'])
@@ -243,7 +249,7 @@ def solve_riddle(riddle_id):
 def monthly_riddle():
         user_id = request.user['id']
         current_date = datetime.now(timezone.utc)
-        
+
         # Obtener acertijo mensual actual (mes/año actual)
         monthly_riddle = supabase.table('riddles') \
                                .select('*') \
@@ -253,7 +259,7 @@ def monthly_riddle():
                                .execute().data
 
         if not monthly_riddle:
-            return render_template('error.html', 
+            return render_template('error.html',
                                  error="No hay acertijo mensual disponible"), 404
 
         monthly_riddle = monthly_riddle[0]
@@ -270,10 +276,10 @@ def monthly_riddle():
         success = False
         if request.method == 'POST' and not solved_this_month:
             respuesta = request.form.get('respuesta', '').strip().lower()
-            
+
             # Registrar intento
-            
-            
+
+
             if comparar_strings(respuesta,monthly_riddle['answer']):
                 # Marcar como resuelto
                 supabase.table('user_progress').upsert({
@@ -294,7 +300,7 @@ def monthly_riddle():
 
         # Calcular próximo mes disponible
         next_month_date = (current_date.replace(day=28) + timedelta(days=4)).replace(day=1)
-        
+
         return render_template('monthly.html',
             monthly_riddle=monthly_riddle,
             solved=solved_this_month,
@@ -304,7 +310,7 @@ def monthly_riddle():
         )
 
         app.logger.error(f'Error en mensual: {str(e)}')
-        return render_template('error.html', 
+        return render_template('error.html',
                             error="Error al cargar el acertijo mensual"), 500
 @app.route('/riddle/<string:riddle_id>', methods=['GET', 'POST'])
 @jwt_required
@@ -318,23 +324,23 @@ def riddle(riddle_id):
                       .single() \
                       .execute()
         riddle = riddle.data
-        
+
         # Verificar si ya fue resuelta
         progreso = supabase.table('user_progress') \
                          .select('solved_at') \
                          .eq('user_id', user_id) \
                          .eq('riddle_id', riddle_id) \
                          .execute()
-        
+
         if progreso.data:
-            return render_template('clue.html', 
+            return render_template('clue.html',
                                  pista=riddle['hint'],
                                  tipo='éxito')
 
         # Manejar POST
         if request.method == 'POST':
             respuesta = request.form.get('respuesta', '').strip().lower()
-            
+
             if respuesta == riddle['answer'].lower():
                 # Registrar en Supabase
                 supabase.table('user_progress').insert({
@@ -342,8 +348,8 @@ def riddle(riddle_id):
                     'riddle_id': riddle_id,
                     'solved_at': datetime.now(timezone.utc).isoformat()
                 }).execute()
-                
-                return render_template('clue.html', 
+
+                return render_template('clue.html',
                                      pista=riddle['hint'],
                                      tipo='éxito')
             else:
@@ -353,7 +359,7 @@ def riddle(riddle_id):
                     'riddle_id': riddle_id,
                     'attempts': riddle.get('attempts', 0) + 1
                 }).execute()
-                
+
                 return render_template('riddle.html',
                                      riddle=riddle,
                                      error='Respuesta incorrecta 😿')
@@ -379,4 +385,4 @@ def unauthorized(e):
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True) 
+    app.run(host='0.0.0.0', port=5000, debug=True)

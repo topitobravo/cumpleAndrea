@@ -13,16 +13,19 @@
             <div class="bg-emerald-50 p-4 rounded-lg border-2 border-dashed border-emerald-200">
                 <span class="text-emerald-700 font-medium text-xl">🗺️ {{ pista }}</span>
             </div>
-{% if location %}
-        <iframe
-            src="https://www.google.com/maps?q=40.712776,-74.005974&hl=es&z=16&output=embed"
-            width="600"
-            height="450"
-            style="border:0;"
-            allowfullscreen
-            loading="lazy">
-        </iframe>
-{% endif %}
+
+            {% if location %}
+            <div class="mt-6">
+                <iframe
+                    class="w-full h-64 md:h-96 rounded-lg shadow-md"
+                    src="https://www.google.com/maps?q=40.712776,-74.005974&hl=es&z=16&output=embed"
+                    style="border:0;"
+                    allowfullscreen
+                    loading="lazy">
+                </iframe>
+            </div>
+            {% endif %}
+
             <a href="{{ url_for('index') }}"
                class="inline-block mt-6 bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg transition-colors">
                 ← Volver a los Regalos

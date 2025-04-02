@@ -10,7 +10,7 @@ from unidecode import unidecode
 ROUTES={
     'register': "/oajspoihpifojapoisjpiodsa",
     'login' : "/aoisjhfopishfpiojahsipjfioas",
-    'index' : "/fjsjfacahpocijahipsojcipojsiodsa",
+    'index' : "/cacaculopedopis",
     'aviso' : "/jahcdjhioajsiojciojasocojsisd",
     'ruta1' : "/asfasfgasfsaafsadfassagasgs",
     'ruta2' : "/safasefwaefwaefaawefawefwf",

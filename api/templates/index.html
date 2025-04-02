@@ -42,39 +42,5 @@
                     {% endif %}
                 </div>
             {% endfor %}
-        </div>
-
-        <!-- Sección de adivinanza mensual -->
-        <div class="bg-white p-6 rounded-xl shadow-lg border-2 border-dashed border-purple-200 mt-8">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4">
-                <h3 class="text-xl font-semibold text-pink-600">🎁 Regalo Mensual</h3>
-
-                {% if monthly_riddle.id in solved_riddles %}
-                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">✅ Resuelto</span>
-                {% else %}
-                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">🌙 Disponible</span>
-                {% endif %}
-            </div>
-
-            {% if monthly_riddle.id in solved_riddles %}
-            <div class="bg-emerald-50 p-4 mt-4 rounded-lg border-2 border-dashed border-emerald-200">
-                <span class="text-emerald-700 font-medium text-xl">🗺️ {{ monthly_riddle.hint }}</span>
-                <p class="text-gray-600 mt-1">
-                    Próximo acertijo disponible el
-                    <span class="font-bold text-purple-600">
-                        {{ next_month_date.strftime('%d/%m/%Y') }}
-                    </span>
-                </p>
-            </div>
-            {% endif %}
-        </div>
-
-
-
-            <a href="{{ url_for('monthly_riddle') }}"
-               class="inline-block w-full text-center bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-colors">
-                🗝️ Intentar adivinanza mensual
-            </a>
-        </div>
     </div>
 {% endblock %}

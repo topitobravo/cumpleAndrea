@@ -169,7 +169,7 @@ def aviso():
 
 @app.route('/bienvenida', methods=['GET', 'POST'])
 def bienvenida():
-    inicial = supabase.table('riddles').select('*').eq('name', 'inicial').execute().data[0]
+    inicial = supabase.table('riddles').select('*').eq('type', 'inicial').execute().data[0]
     if request.method == 'POST':
         answer = request.form.get('respuesta')
         if comparar_strings(answer,inicial['answer']):

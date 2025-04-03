@@ -11,13 +11,14 @@ ROUTES={
     'register': "/oajspoihpifojapoisjpiodsa",
     'login' : "/aoisjhfopishfpiojahsipjfioas",
     'index' : "/cacaculopedopis",
-    'aviso' : "/jahcdjhioajsiojciojasocojsisd",
+    'aviso' : "/jahcdjhioajsiojciojasocojsisd", #hecho
     'ruta1' : "/asfasfgasfsaafsadfassagasgs",
     'ruta2' : "/safasefwaefwaefaawefawefwf",
     'ruta3' : "/fwafasfasfsefasfasefasfas",
     'ruta4' : "/afsfsafsafsaefasefeasefaea",
     'ruta5' : "/afasfseafsafafeafafafeaef",
     'ruta6s' : "/afefasfesafsaeaeafasfaeasfa",
+    'bienvenida' : "/bienvenida"
 }
 
 app = Flask(__name__)

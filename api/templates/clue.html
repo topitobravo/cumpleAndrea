@@ -1,24 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="text-center space-y-6">
-        <div class="animate-pulse">
-            <span class="text-6xl">🎉</span>
+    <div class="text-center space-y-8">
+        <div class="shine-effect inline-block rounded-full p-4">
+            <span class="text-6xl text-amber-400/90 animate-pulse">🎉</span>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-lg">
-            <h2 class="text-2xl font-bold text-emerald-600 mb-4">¡Correcto! 🎊</h2>
-            <div class="text-lg text-gray-700 mb-4">
-                Has ganado la pista del tesoro:
+        <div class="bg-white/10 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-white/20 hover:border-amber-400/30 transition-all duration-300">
+            <h2 class="title-font text-4xl font-bold bg-gradient-to-r from-rose-200 to-amber-200 bg-clip-text text-transparent mb-6">
+                ¡Tesoro Descubierto! ✨
+            </h2>
+            
+            <div class="text-lg text-rose-100/80 mb-6 tracking-wide body-font">
+                Has desbloqueado el secreto:
             </div>
-            <div class="bg-emerald-50 p-4 rounded-lg border-2 border-dashed border-emerald-200">
-                <span class="text-emerald-700 font-medium text-xl">🗺️ {{ pista }}</span>
+            
+            <div class="bg-amber-500/10 p-6 rounded-xl border border-amber-500/20 mb-8">
+                <span class="text-amber-200 font-medium text-2xl tracking-wide title-font">
+                    🗝️ {{ riddle.hint }}
+                </span>
             </div>
 
-            {% if location %}
-            <div class="mt-6">
+            {% if riddle.latitude %}
+            <div class="mt-8 overflow-hidden rounded-xl border-2 border-white/10 shadow-2xl">
                 <iframe
-                    class="w-full h-64 md:h-96 rounded-lg shadow-md"
-                    src="https://www.google.com/maps?q=40.712776,-74.005974&hl=es&z=16&output=embed"
+                    class="w-full h-64 md:h-96"
+                    src="https://www.google.com/maps?q={{riddle.latitude}},{{riddle.longitude}}&hl=es&z=16&output=embed"
                     style="border:0;"
                     allowfullscreen
                     loading="lazy">
@@ -27,8 +33,8 @@
             {% endif %}
 
             <a href="{{ url_for('index') }}"
-               class="inline-block mt-6 bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg transition-colors">
-                ← Volver a los Regalos
+               class="inline-block mt-8 bg-gradient-to-r from-rose-400/90 to-amber-500/90 hover:from-rose-300 hover:to-amber-400 text-rose-50 px-8 py-3 rounded-xl font-semibold title-font tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
+                ← Regresar a los Misterios
             </a>
         </div>
     </div>

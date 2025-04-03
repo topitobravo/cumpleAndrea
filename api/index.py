@@ -110,7 +110,9 @@ def index():
                             .data
 
         # Separar adivinanzas regulares y mensuales
-        regular_riddles = [r for r in all_riddles if r['type'] == 'regalo']
+        riddles_regalo = [r for r in all_riddles if r['type'] == 'regalo']
+        riddles_viernes = [r for r in all_riddles if r['type'] == 'viernes' and r['indice'] !=1]
+        riddles_viernes =  sorted(riddles_viernes,key=lambda x:x['indice'])
 
         progress = supabase.table('user_progress') \
                     .select('riddle_id, solved_at') \
@@ -124,8 +126,9 @@ def index():
 
         return render_template('index.html',
             user=request.user,
-            riddles=regular_riddles,
+            riddles_regalo=riddles_regalo,
             solved_riddles=solved_riddles,
+            riddles_viernes=riddles_viernes
         )
 
     except Exception as e:
@@ -204,18 +207,34 @@ def logout():
 
 @app.route('/riddle/<riddle_id>', methods=['GET', 'POST'])
 @jwt_required
-def solve_riddle(riddle_id):
+def handle_riddle(riddle_id):
+    user_id = request.user['id']
+    progress = supabase.table('user_progress') \
+                .select('riddle_id, solved_at') \
+                .eq('user_id', user_id) \
+                .execute() \
+                .data
+    # Crear diccionario de progreso
+    solved_riddles = {p['riddle_id']: datetime.fromisoformat(p['solved_at'])
+                    for p in progress if p['solved_at']}
+
     riddle = supabase.table('riddles').select('*').eq('id', riddle_id).execute().data
     if not riddle:
         return redirect(url_for('index'))
 
     riddle = riddle[0]
-    progress = supabase.table('user_progress').select('*').match({
-        'user_id': request.user['id'],
-        'riddle_id': riddle_id
-    }).execute().data
+
+    print(riddle)
+    if riddle['id']  in solved_riddles:
+        solved = True
+    elif riddle['type'] == 'viernes' and riddle['indice'] == 0:
+        solved = True
+    else:
+        solved = False
 
     if request.method == 'POST':
+        if solved:
+            return render_template('clue.html', riddle=riddle)
         answer = request.form.get('respuesta', '').strip().lower()
         if comparar_strings(answer,riddle['answer']):
             # Registrar progreso
@@ -225,141 +244,15 @@ def solve_riddle(riddle_id):
                 'solved_at': datetime.now(timezone.utc).isoformat()
             }).execute()
 
-            return render_template('clue.html', pista=riddle['hint'], location= "caca")
+            return render_template('clue.html', riddle=riddle)
 
         return render_template('riddle.html',
                              riddle=riddle,
                              error='Respuesta incorrecta')
-
+    else:
+        if solved:
+            return render_template('clue.html', riddle=riddle)
     return render_template('riddle.html', riddle=riddle)
-
-# @app.route('/monthly', methods=['GET', 'POST'])
-# @jwt_required
-# def monthly_riddle():
-#         user_id = request.user['id']
-#         current_date = datetime.now(timezone.utc)
-
-#         # Obtener acertijo mensual actual (mes/año actual)
-#         monthly_riddle = supabase.table('riddles') \
-#                                .select('*') \
-#                                .eq('type', 'monthly') \
-#                                .eq('month', current_date.month) \
-#                                .eq('year', current_date.year) \
-#                                .execute().data
-
-#         if not monthly_riddle:
-#             return render_template('error.html',
-#                                  error="No hay acertijo mensual disponible"), 404
-
-#         monthly_riddle = monthly_riddle[0]
-#         # Verificar si ya resolvió ESTE MES
-#         solved_this_month = supabase.table('user_progress') \
-#                                   .select('solved_at') \
-#                                   .eq('user_id', user_id) \
-#                                   .eq('riddle_id', monthly_riddle['id']) \
-#                                   .not_.is_('solved_at', 'null') \
-#                                   .execute().data
-
-#         # Manejar POST
-#         error = None
-#         success = False
-#         if request.method == 'POST' and not solved_this_month:
-#             respuesta = request.form.get('respuesta', '').strip().lower()
-
-#             # Registrar intento
-
-
-#             if comparar_strings(respuesta,monthly_riddle['answer']):
-#                 # Marcar como resuelto
-#                 supabase.table('user_progress').upsert({
-#                     'user_id': user_id,
-#                     'riddle_id': monthly_riddle['id'],
-#                     'solved_at': current_date.isoformat()
-#                 }).execute()
-#                 success = True
-#                 solved_this_month = True
-#             else:
-#                 supabase.table('user_progress').upsert({
-#                 'user_id': user_id,
-#                 'riddle_id': monthly_riddle['id'],
-#                 'attempts': monthly_riddle.get('attempts', 0) + 1,
-#                 'last_attempt': current_date.isoformat()
-#             }).execute()
-#                 error = "Respuesta incorrecta. ¡Sigue intentándolo!"
-
-#         # Calcular próximo mes disponible
-#         next_month_date = (current_date.replace(day=28) + timedelta(days=4)).replace(day=1)
-
-#         return render_template('monthly.html',
-#             monthly_riddle=monthly_riddle,
-#             solved=solved_this_month,
-#             success=success,
-#             error=error,
-#             next_month_date=next_month_date
-#         )
-
-#         app.logger.error(f'Error en mensual: {str(e)}')
-#         return render_template('error.html',
-#                             error="Error al cargar el acertijo mensual"), 500
-@app.route('/riddle/<string:riddle_id>', methods=['GET', 'POST'])
-@jwt_required
-def riddle(riddle_id):
-    try:
-        # Obtener usuario y riddle
-        user_id = request.user['id']
-        riddle = supabase.table('riddles') \
-                      .select('*') \
-                      .eq('id', riddle_id) \
-                      .single() \
-                      .execute()
-        riddle = riddle.data
-
-        # Verificar si ya fue resuelta
-        progreso = supabase.table('user_progress') \
-                         .select('solved_at') \
-                         .eq('user_id', user_id) \
-                         .eq('riddle_id', riddle_id) \
-                         .execute()
-
-        if progreso.data:
-            return render_template('clue.html',
-                                 pista=riddle['hint'],
-                                 tipo='éxito',location= "caca")
-
-        # Manejar POST
-        if request.method == 'POST':
-            respuesta = request.form.get('respuesta', '').strip().lower()
-
-            if respuesta == riddle['answer'].lower():
-                # Registrar en Supabase
-                supabase.table('user_progress').insert({
-                    'user_id': user_id,
-                    'riddle_id': riddle_id,
-                    'solved_at': datetime.now(timezone.utc).isoformat()
-                }).execute()
-
-                return render_template('clue.html',
-                                     pista=riddle['hint'],
-                                     tipo='éxito',location= "caca")
-            else:
-                # Registrar intento fallido
-                supabase.table('user_progress').upsert({
-                    'user_id': user_id,
-                    'riddle_id': riddle_id,
-                    'attempts': riddle.get('attempts', 0) + 1
-                }).execute()
-
-                return render_template('riddle.html',
-                                     riddle=riddle,
-                                     error='Respuesta incorrecta 😿')
-
-        # Renderizar riddle
-        return render_template('riddle.html',
-                             riddle=riddle)
-
-    except Exception as e:
-        app.logger.error(f'Error en riddle: {str(e)}')
-        return redirect(url_for('index'))
 
 @app.route('/static/<path:path>')
 def serve_static(path):

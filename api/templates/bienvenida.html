@@ -1,53 +1,86 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="container">
-        <div class="intro-text">
-            <p>🎉 ¡Hola cumpleañera! 🎉</p>
-            <p>Hoy es el día de tu cumpleaños, y como en el momento de hacer esto, </p>
-            <p>aún no se si seré capaz de escribir en la tarjeta...eso suena como un</p>
-            <p>buen backup :P nah, mal será. Espero que el mensaje que allí haya escrito</p>
-            <p>te haya gustado. </p>
-            <p>Como este año no tuvimos el ScapeRoom de reconquista, he pedido a los gatitos </p>
-            <p>que me programen un pequeño juego, si, me encanta delegar... </p>
-            <p>Hay dos partes, las adivinanzas que puedes acceder ya, que te darán acceso </p>
-            <p>a los regalos que puedes conseguir hoy (espero que lleguen todos...)".</p>
-           </p>Los podrás conseguir hoy, eso si, si aciertas las adivinanzas! son fáciles :) y por un besito puedes llevar una pista</p>
-            <p>La segunda parte, consistirá em un pequeño juego! tendrás también que resolver adivinanzas, que te desvelaran una localización
-            <p>y un acertijo! en dicha localización siempre encontrarás un QR, que te dará acceso a la siguiente pista!</p>  
-            <p>son 5 en total, la última revelará el lugar y la hora de la sorpresa del viernes! </p>  
-            <p>No hagas trampas, recuerda, los gatitos te estamos vigilando</p>  
-            </p>
+    <div class="container mx-auto px-4 max-w-3xl">
+        <!-- Sección Intro -->
+        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 mb-12 shadow-2xl border border-white/20">
+            <div class="text-center space-y-5 body-font">
+                <div class="shine-effect inline-block mb-6">
+                    <span class="text-6xl text-amber-400">🎉</span>
+                </div>
+                
+                <p class="text-2xl title-font bg-gradient-to-r from-rose-200 to-amber-200 bg-clip-text text-transparent">
+                    ¡Hola cumpleañera!
+                </p>
+                
+                <div class="text-rose-100/80 leading-relaxed text-lg">
+                    <p>Hoy es el día de tu cumpleaños, y como en el momento de hacer esto, </p>
+                    <p>aún no se si seré capaz de escribir en la tarjeta...eso suena como un</p>
+                    <p>buen backup :P nah, mal será. Espero que el mensaje que allí haya escrito</p>
+                    <p>te haya gustado. </p>
+                    <p>Como este año no tuvimos el ScapeRoom de reconquista, he pedido a los gatitos </p>
+                    <p>que me programen un pequeño juego, si, me encanta delegar... </p>
+                    <p>El juego tiene <span class="text-amber-300 font-medium">dos fases épicas</span>:</p>
+                    
+                    <div class="text-left space-y-4 pl-4 border-l-2 border-amber-400/30 my-6">
+                        <div class="flex items-start">
+                            <span class="text-amber-400 mr-3">①</span>
+                            <p><span class="font-semibold">Adivinanzas de regalo:</span> Resuélvelas para descubrir tus regalos hoy mismo!
+                                Son muy facilitas y seguro que no tienen problema, pero bueno, puedes contar con pistas a cambio de un besito
+                            para Dani y una latita extra para los gatitos!</p>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <span class="text-amber-400 mr-3">②</span>
+                            <p><span class="font-semibold">Búsqueda del Tesoro:</span> Tendrás que resolver adivinanzas que te darán acceso a pistas.
+                            En cada pista encontrarás una localización, y un nuevo enigma. Tendrás que buscar un codigo QR que te dará acceso
+                        a la siguiente pista. La última revelará la sorpresa del viernes! Emocionante!</p>
+                        </div>
+                    </div>
+                    <p>Resuelve la primera adivinanza para acceder al la pagina de registro. Con tu usuario, podrás ya acceder al juevo</p>
+                    <p class="text-sm text-rose-200/60 italic">* A por ello! y recuerda, no hagas trampas, te vigilamos! 🐾👀</p>
+                </div>
+            </div>
         </div>
 
-        <div class="flex justify-center my-6">
-            <img src="static/foto-gatos.jpg" alt="Tus gatitos" class="gato-img w-128 rounded-lg shadow-lg">
+        <!-- Imagen Gatitos -->
+        <div class="flex justify-center my-12">
+            <div class="relative group overflow-hidden rounded-2xl shadow-2xl border-2 border-white/20 hover:border-amber-400/30 transition-all duration-500">
+                <img src="static/foto-gatos.jpg" 
+                     alt="Agentes especiales gatunos" 
+                     class="max-w-2xl transform group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+            </div>
         </div>
 
-        <div class="text-center space-y-6">
-            <div class="animate-bounce">
-                <span class="text-6xl">🔍</span>
+        <!-- Sección Acertijo -->
+        <div class="text-center space-y-8 mb-16">
+            <div class="animate-pulse">
+                <span class="text-6xl text-rose-300/80">🔍</span>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ pregunta }}</h2>
-
+            <div class="bg-white/10 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-white/20 hover:border-amber-400/30 transition-all duration-300">
+                <h2 class="title-font text-3xl font-bold bg-gradient-to-r from-rose-200 to-amber-200 bg-clip-text text-transparent mb-6">
+                    {{ pregunta }}
+                </h2>
+                
                 {% if error %}
-                    <div class="bg-red-50 text-red-700 p-3 rounded-lg mb-4">
-                        {{ error }} ❌
+                    <div class="bg-red-500/10 text-red-200 px-6 py-4 rounded-xl border border-red-500/20 mb-6">
+                        <span class="text-lg">❌ {{ error }}</span>
                     </div>
                 {% endif %}
-
-                <form method="POST" class="space-y-4">
-                    <input type="text"
-                           name="respuesta"
+                
+                <form method="POST" class="space-y-6">
+                    <input type="text" 
+                           name="respuesta" 
                            placeholder="Escribe tu respuesta aquí..."
-                           class="w-full px-4 py-2 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-
-                    <button type="submit"
-                            class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg transition-colors font-semibold">
+                           class="w-full px-6 py-3 bg-white/5 border-2 border-rose-300/30 rounded-xl focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-400/20 text-rose-100 placeholder-rose-300/50 body-font text-lg transition-all duration-300">
+                    
+                    <button type="submit" 
+                            class="bg-gradient-to-r from-rose-400 to-amber-500 hover:from-rose-300 hover:to-amber-400 text-rose-50 px-8 py-3 rounded-xl font-semibold title-font tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 w-full">
                         ✨ Verificar Respuesta
                     </button>
                 </form>
             </div>
         </div>
+    </div>
 {% endblock %}

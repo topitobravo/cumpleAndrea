@@ -10,7 +10,7 @@ from unidecode import unidecode
 ROUTES={
     'register': "/oajspoihpifojapoisjpiodsa",
     'login' : "/aoisjhfopishfpiojahsipjfioas",
-    'index' : "/cacaculopedopis",
+    'index' : "/caca",
     'aviso' : "/jahcdjhioajsiojciojasocojsisd", #hecho
     'ruta1' : "/asfasfgasfsaafsadfassagasgs",
     'ruta2' : "/safasefwaefwaefaawefawefwf",
@@ -110,47 +110,22 @@ def index():
                             .data
 
         # Separar adivinanzas regulares y mensuales
-        regular_riddles = [r for r in all_riddles if r['type'] == 'regular']
+        regular_riddles = [r for r in all_riddles if r['type'] == 'regalo']
 
-        # Obtener el acertijo mensual actual (basado en mes/año actual)
-        current_date = datetime.now()
-        monthly_riddle = supabase.table('riddles') \
-                               .select('*') \
-                               .eq('type', 'monthly') \
-                               .eq('month', current_date.month) \
-                               .eq('year', current_date.year) \
-                               .execute() \
-                               .data
-        monthly_riddle = monthly_riddle[0]
-        # Obtener progreso del usuario
         progress = supabase.table('user_progress') \
-                          .select('riddle_id, solved_at') \
-                          .eq('user_id', user_id) \
-                          .execute() \
-                          .data
+                    .select('riddle_id, solved_at') \
+                    .eq('user_id', user_id) \
+                    .execute() \
+                    .data
 
-        monthly_status = {
-            'available': False,
-            'next_attempt': None
-        }
           # Crear diccionario de progreso
         solved_riddles = {p['riddle_id']: datetime.fromisoformat(p['solved_at'])
                         for p in progress if p['solved_at']}
-        if monthly_riddle:
-            last_solved = solved_riddles.get(monthly_riddle['id'])
-            if last_solved:
-                monthly_status['available'] = True
-                next_month_date = (current_date.replace(day=28) + timedelta(days=4)).replace(day=1)
-            else:
-                next_month_date = None
+
         return render_template('index.html',
             user=request.user,
             riddles=regular_riddles,
-            monthly_riddle=monthly_riddle,
             solved_riddles=solved_riddles,
-            monthly_status=monthly_status,
-            current_date=datetime.now(),
-            next_month_date = next_month_date
         )
 
     except Exception as e:

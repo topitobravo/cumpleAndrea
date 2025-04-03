@@ -1,82 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎉 36º Cumpleaños 🎂</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Fondo en tonos festivos con degradado rosado */
-    body {
-      background: radial-gradient(circle, #ffe4f0, #ffb3d9);
-    }
-    /* Animación para los globos y las cabezas de los gatos */
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
-      100% { transform: translateY(0px); }
-    }
-    .floating {
-      animation: float 4s ease-in-out infinite alternate;
-      position: absolute;
-    }
-    .balloon {
-      font-size: 3rem;
-    }
-    .cat-head {
-      width: 50px;
-      height: 50px;
-    }
-    /* Posiciones de los elementos flotantes para pantallas grandes */
-    .floating:nth-child(1) { left: 10%; top: 20%; }
-    .floating:nth-child(2) { left: 80%; top: 30%; }
-    .floating:nth-child(3) { left: 15%; top: 60%; }
-    .floating:nth-child(4) { left: 85%; top: 70%; }
-    
-    /* Ajustes responsivos para móviles */
-    @media (max-width: 640px) {
-      .floating:nth-child(1) { left: 5%; top: 10%; }
-      .floating:nth-child(2) { left: 75%; top: 15%; }
-      .floating:nth-child(3) { left: 10%; top: 70%; }
-      .floating:nth-child(4) { left: 70%; top: 75%; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 36º Cumpleaños - Tesoro 🎉</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-effect { animation: float 3s ease-in-out infinite; }
+        .birthday-gradient { background: linear-gradient(135deg, #6366f1 0%, #d946ef 50%, #f59e0b 100%); }
+        .balloon {
+            position: absolute;
+            font-size: 3rem;
+            animation: float 4s ease-in-out infinite alternate;
+        }
+        .balloon:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+        .balloon:nth-child(2) { left: 80%; top: 30%; animation-delay: 1s; }
+    </style>
 </head>
-<body class="min-h-screen flex flex-col justify-center items-center relative">
-  <!-- Elementos flotantes -->
-  <div class="balloon floating">🎈</div>
-  <div class="balloon floating">🎈</div>
-  <img src="static/cosmo_cabeza.png" alt="Cosmo" class="cat-head floating">
-  <img src="static/cooper_cabeza.png" alt="Cooper" class="cat-head floating">
-  
-  <div class="container mx-auto px-4 py-8 max-w-3xl bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl">
-    <header class="text-center mb-6">
-      <h1 class="text-5xl font-bold text-pink-600 mb-2">¡Feliz 36º Cumpleaños!</h1>
-      <p class="text-gray-700 text-lg">¡Hoy celebramos tu día con diversión y sorpresas!</p>
-    </header>
-    <main>
-      {% block content %}{% endblock %}
-    </main>
-    <footer>
-        <p>Miaurechos reservados Cosmo <img src="static/cosmo_cabeza.png" alt="Cosmo" class="gato-img">
-           y Cooper <img src="static/cooper_cabeza.png" alt="Cooper" class="gato-img"> Miauright © 2025 </p>
-        <style>
-            footer {
-                font-size: 0.8rem;      /* Reduce el tamaño del texto */
-                text-align: center;     /* Centra el contenido */
-                margin-top: 20px;       /* Agrega margen superior */
-                padding: 5px 0;         /* Reduce el padding */
-            }
+<body class="birthday-gradient min-h-screen flex justify-center items-center relative">
+    <div class="balloon">🎈36</div>
+    <div class="balloon">36🎈</div>
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-8 transform transition-all duration-300 hover:shadow-3xl">
+            <header class="text-center mb-8">
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent py-2">
+                    🎉 ¡Feliz 36º Cumpleaños! 🎂
+                </h1>
+                <p class="text-gray-600 mt-2 text-lg">¡Resuelve los acertijos y descubre tus regalos sorpresa! 🎁</p>
+            </header>
 
-            .gato-img {
-                display: inline;
-                width: 1.5em;            /* Reduce el tamaño relativo a la fuente */
-                height: 1.5em;
-                vertical-align: middle;  /* Alinea mejor con el texto */
-                margin: 0 2px;           /* Añade un pequeño margen lateral */
-            }
-        </style>
-    </footer>
-  </div>
+            <main>
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+        <footer>
+            <p>Miaurechos reservados Cosmo <img src="static/cosmo_cabeza.png" alt="Cosmo" class="gato-img">
+               y Cooper <img src="static/cooper_cabeza.png" alt="Cooper" class="gato-img"> Miauright © 2025 </p>
+            <style>
+                footer {
+                    font-size: 0.8rem;      /* Reduce el tamaño del texto */
+                    text-align: center;     /* Centra el contenido */
+                    margin-top: 20px;       /* Agrega margen superior */
+                    padding: 5px 0;         /* Reduce el padding */
+                }
+
+                .gato-img {
+                    display: inline;
+                    width: 1.5em;            /* Reduce el tamaño relativo a la fuente */
+                    height: 1.5em;
+                    vertical-align: middle;  /* Alinea mejor con el texto */
+                    margin: 0 2px;           /* Añade un pequeño margen lateral */
+                }
+            </style>
+        </footer>
+    </div>
+
 </body>
 </html>

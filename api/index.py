@@ -149,6 +149,14 @@ def aviso():
 
 @app.route('/bienvenida', methods=['GET', 'POST'])
 def bienvenida():
+    return redirect(url_for('aviso'))
+
+@app.route('/cacaculopedopis', methods=['GET', 'POST'])
+def cacaculopedopis():
+    return redirect(url_for('welcome'))
+
+@app.route('/welcome', methods=['GET', 'POST'])
+def welcome():
     inicial = supabase.table('riddles').select('*').eq('type', 'inicial').execute().data[0]
     if request.method == 'POST':
         answer = request.form.get('respuesta')
@@ -158,7 +166,6 @@ def bienvenida():
             return render_template('bienvenida.html', error="Vuelvelo a intentar. Venga, esta es muy facil :)")
 
     return render_template('bienvenida.html',pregunta=inicial['question'])
-
 
 #login
 @app.route(ROUTES['login'], methods=['GET', 'POST'])

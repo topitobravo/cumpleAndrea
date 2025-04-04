@@ -246,6 +246,13 @@ def handle_riddle(riddle_id):
             }).execute()
 
             return render_template('clue.html', riddle=riddle)
+        else:
+           supabase.table('user_progress').upsert({
+                'user_id': request.user['id'],
+                'riddle_id': riddle_id,
+                'last_attempt': datetime.now(timezone.utc).isoformat(),
+                'tried_answer': answer
+            }).execute()
 
         return render_template('riddle.html',
                              riddle=riddle,

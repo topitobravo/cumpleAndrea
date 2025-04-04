@@ -5,8 +5,7 @@
             <span class="text-6xl text-amber-400/90 animate-pulse">🎉</span>
         </div>
 
-        <div class="bg-white/10 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-white/20 hover:border-amber-400/30 transition-all duration-300">
-            <h2 class="title-font text-4xl font-bold bg-gradient-to-r from-rose-200 to-amber-200 bg-clip-text text-transparent mb-6">
+            <h2 class="title-font text-3xl font-bold bg-gradient-to-r from-rose-200 to-amber-200 bg-clip-text text-transparent mb-6">
                 ¡Tesoro Descubierto! ✨
             </h2>
             
@@ -14,12 +13,12 @@
                 Has desbloqueado el secreto:
             </div>
             
-            <div class="bg-amber-500/10 p-6 rounded-xl border border-amber-500/20 mb-8">
-                <span class="text-amber-200 font-medium text-2xl tracking-wide title-font">
+            <div class="bg-amber-500/10 p-4 sm:p-6 rounded-xl border border-amber-500/20 my-4">
+            <span class="text-amber-200 font-medium text-base sm:text-lg tracking-wide title-font leading-snug">
                     🗝️ {{ riddle.hint }}
                 </span>
             </div>
-
+            
             {% if riddle.latitude %}
             <div class="mt-8 overflow-hidden rounded-xl border-2 border-white/10 shadow-2xl">
                 <iframe
@@ -36,6 +35,5 @@
                class="inline-block mt-8 bg-gradient-to-r from-rose-400/90 to-amber-500/90 hover:from-rose-300 hover:to-amber-400 text-rose-50 px-8 py-3 rounded-xl font-semibold title-font tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
                 ← Regresar a los Misterios
             </a>
-        </div>
     </div>
 {% endblock %}

@@ -111,6 +111,7 @@ def index():
 
         # Separar adivinanzas regulares y mensuales
         riddles_regalo = [r for r in all_riddles if r['type'] == 'regalo']
+        riddles_regalo = sorted(riddles_regalo,key=lambda x:x['indice'])
         riddles_viernes = [r for r in all_riddles if r['type'] == 'viernes' and r['indice'] !=1]
         riddles_viernes =  sorted(riddles_viernes,key=lambda x:x['indice'])
 

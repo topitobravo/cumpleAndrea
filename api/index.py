@@ -89,7 +89,7 @@ def comparar_strings(s1, s2):
 def create_jwt(user_id):
     payload = {
         'sub': user_id,
-        'exp': datetime.now(timezone.utc) + timedelta(days=1),
+        'exp': datetime.now(timezone.utc) + timedelta(days=10),
         'iat': datetime.now(timezone.utc)
     }
     return jwt.encode(payload, app.config['JWT_SECRET'], algorithm='HS256')

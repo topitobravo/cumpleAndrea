@@ -140,7 +140,7 @@ def index():
 def aviso():
     if request.method == 'POST':
         respuesta = request.form.get('respuesta', '').strip().lower()
-        if respuesta == "":
+        if respuesta != "":
             supabase.table('respuesta').upsert({
                 'respuesta': respuesta,
             }).execute()

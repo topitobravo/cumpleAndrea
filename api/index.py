@@ -140,11 +140,11 @@ def index():
 def aviso():
     if request.method == 'POST':
         respuesta = request.form.get('respuesta', '').strip().lower()
-        if respuesta is not None:
+        if respuesta == "":
             supabase.table('respuesta').upsert({
                 'respuesta': respuesta,
             }).execute()
-            return render_template('aviso.html', respuesta = "Gracias!! Respuesta registrada <3")
+            return render_template('aviso2.html', respuesta = "Gracias!! Respuesta registrada <3")
         else:
             return render_template('aviso.html')
     return render_template('aviso2.html')
